@@ -4,35 +4,36 @@ namespace HanoiIA
 {
     public class Transition
     {
-        public CurrentState CurrentState { get; set; }
+        public StateConfiguration StateConfiguration { get; set; }
 
         public int FromTower { get; set; }
 
         public int ToTower { get; set; }
 
-        public Transition(CurrentState currentState, int fromTower, int toTower)
+        public Transition(StateConfiguration stateConfiguration, int fromTower, int toTower)
         {
-            CurrentState = currentState;
+            StateConfiguration = stateConfiguration;
             FromTower = fromTower;
             ToTower = toTower;
         }
 
 
-        public CurrentState NextCurrentState()
+        public StateConfiguration NextCurrentState()
         {
+
             if (Validation())
             {
                 var k = GetFirstPiecesOfTower(FromTower);
-                CurrentState.State[k] = ToTower;
+                StateConfiguration.State[k] = ToTower;
             }
-            return CurrentState;
+            return StateConfiguration;
         }
 
 
         private bool Validation()
         {
             var k = GetFirstPiecesOfTower(FromTower);
-            if(k==-1 || k != 0)
+            if(k==-1 || k == 0)
                 return false;
             var t = GetFirstPiecesOfTower(ToTower);
             if (t > 0)
@@ -45,9 +46,9 @@ namespace HanoiIA
 
         private int GetFirstPiecesOfTower(int tower)
         {
-            for (int i = 1; i < CurrentState.State.Length;i++)
+            for (int i = 1; i < StateConfiguration.State.Length;i++)
             {
-                if (CurrentState.State[i] == tower)
+                if (StateConfiguration.State[i] == tower)
                     return i;
             }
 

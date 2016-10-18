@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace HanoiIA.Strategies
 {
     public class RandomStrategy : IStrategy
     {
-        private CurrentState State { get; set; }
+        private StateConfiguration StateConfiguration { get; set; }
 
-        private int MaxIteration { get; set; }
+        private int MaxIterationToReset { get; set; }
 
+        private const int MaxIterationToAbort = 1000000;
         private readonly Random random = new Random();
 
         public event EventHandler<TransitionEventArgs> OnTrantition;
 
+        public event EventHandler<TransitionEventArgs> OnCompleted;
 
-        public RandomStrategy(int maxIteration)
+        public event EventHandler<EventArgs> OnAbort; 
+
+
+        public RandomStrategy(int maxIterationToReset)
         {
-            MaxIteration = maxIteration;
+            MaxIterationToReset = maxIterationToReset;
+            UsedTransition = new List<Transition>();
         }
 
         private IList<Transition> UsedTransition { get; set; }
@@ -26,10 +33,11 @@ namespace HanoiIA.Strategies
         {
             var randomTower1 = 0;
             var randomTower2 = 0;
-            while (ValidateRandomTowers(new[] { randomTower1, randomTower2 }))
+            while (!ValidateRandomTowers(new[] { randomTower1, randomTower2 }))
             {
-                randomTower1 = random.Next(1, State.NumberOfTowers);
-                randomTower2 = random.Next(1, State.NumberOfTowers);
+
+                randomTower1 = random.Next(1, StateConfiguration.NumberOfTowers + 1);
+                randomTower2 = random.Next(1, StateConfiguration.NumberOfTowers + 1);
             }
 
             return new[] { randomTower1, randomTower2 };
@@ -37,27 +45,51 @@ namespace HanoiIA.Strategies
 
         private bool ValidateRandomTowers(int[] towers)
         {
-            return towers[0] != towers[1] && UsedTransition.All(t => t.FromTower != towers[0] || t.ToTower != towers[1]);
+            if (!StateConfiguration.ExistsPiecesOnTower(towers[0]))
+            {
+
+                return false;
+            }
+
+            if (towers[0] == 0 || towers[1] == 0)
+                return false;
+            return towers[0] != towers[1];
         }
 
 
         public void SolveHanoi(int numberOfTowers, int numberOfPices)
         {
-            State = new CurrentState(numberOfTowers, numberOfPices);
+            StateConfiguration = new StateConfiguration(numberOfTowers, numberOfPices);
             var iterations = 0;
-            while (!State.IsFinalState())
+            var finalFromTower = 0;
+            var finalToTower = 0;
+            var curentCallIteration = 0;
+            while (!StateConfiguration.IsFinalState() && curentCallIteration < MaxIterationToAbort)
             {
-                if (iterations > MaxIteration)
+                if (iterations > MaxIterationToReset)
                 {
-                    State = new CurrentState(numberOfTowers, numberOfPices);
+                    StateConfiguration = new StateConfiguration(numberOfTowers, numberOfPices);
+                    UsedTransition.Clear();
+                    iterations = 0;
                 }
 
                 var randomTowers = GetRandomTowers();
-                var transition = new Transition(State, randomTowers[0], randomTowers[1]);
-                State = transition.NextCurrentState();
-                OnTrantition?.Invoke(transition, new TransitionEventArgs(randomTowers[0], randomTowers[1]));
+                var transition = new Transition(StateConfiguration, randomTowers[0], randomTowers[1]);
+                StateConfiguration = transition.NextCurrentState();
+                OnTrantition?.Invoke(transition, new TransitionEventArgs(randomTowers[0], randomTowers[1], StateConfiguration));
+                UsedTransition.Add(transition);
                 iterations++;
+                finalFromTower = randomTowers[0];
+                finalToTower = randomTowers[1];
+                curentCallIteration++;
             }
+
+            if (curentCallIteration >= MaxIterationToAbort)
+            {
+                OnAbort?.Invoke(this,EventArgs.Empty);
+                return;
+            }
+            OnCompleted?.Invoke(this, new TransitionEventArgs(finalFromTower, finalToTower, StateConfiguration));
         }
 
     }

@@ -1,8 +1,10 @@
 ﻿
 
+using System;
+
 namespace HanoiIA
 {
-    public class CurrentState
+    public class StateConfiguration
     {
         public int[] State { get; set; }
 
@@ -10,7 +12,7 @@ namespace HanoiIA
 
         public int NumberOfPices { get; set; }
 
-        public CurrentState(int[] stateVector)
+        public StateConfiguration(int[] stateVector)
         {
             State = stateVector;
             if (!(stateVector?.Length >= 0)) return;
@@ -18,7 +20,7 @@ namespace HanoiIA
             NumberOfPices = stateVector.Length - 1;
         }
 
-        public CurrentState(int numerOfTowers, params int[] states)
+        public StateConfiguration(int numerOfTowers, params int[] states)
         {
             var currentsState = new int[states.Length + 1];
             currentsState[0] = numerOfTowers;
@@ -28,7 +30,7 @@ namespace HanoiIA
             }
         }
 
-        public CurrentState(int n, int m)
+        public StateConfiguration(int n, int m)
         {
             Initialize(n, m);
         }
@@ -45,6 +47,41 @@ namespace HanoiIA
             }
         }
 
+
+        public void Print()
+        {
+            var line = "";
+            foreach (var el in State)
+            {
+                line = $"{line},{el}";
+            }
+
+            Console.WriteLine($"({line})");
+        }
+
+        public static void Print(int[] state)
+        {
+            var line = "";
+            foreach (var el in state)
+            {
+                line = $"{line},{el}";
+            }
+
+            Console.WriteLine($"({line})");
+        }
+
+        public bool ExistsPiecesOnTower(int tower)
+        {
+            for (int i = 1; i < State.Length; i++)
+            {
+                if (State[i] == tower)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public bool IsFinalState()
         {

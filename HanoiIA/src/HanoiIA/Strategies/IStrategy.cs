@@ -6,5 +6,7 @@ namespace HanoiIA.Strategies
     {
         void SolveHanoi(int numberOfTowers, int numberOfPices);
         event EventHandler<TransitionEventArgs> OnTrantition;
+        event EventHandler<TransitionEventArgs> OnCompleted;
+        event EventHandler<EventArgs> OnAbort;
     }
 }
