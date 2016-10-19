@@ -14,7 +14,12 @@ namespace HanoiIA
 
         public StateConfiguration(int[] stateVector)
         {
-            State = stateVector;
+            State = new int[stateVector.Length];
+            for (int i = 0; i < stateVector.Length; i++)
+            {
+                State[i] = stateVector[i];
+            }
+           
             if (!(stateVector?.Length >= 0)) return;
             NumberOfTowers = stateVector[0];
             NumberOfPices = stateVector.Length - 1;
@@ -28,6 +33,24 @@ namespace HanoiIA
             {
                 currentsState[i] = states[i];
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj.GetType() != typeof(StateConfiguration))
+                return false;
+            StateConfiguration cfg = (StateConfiguration)obj;
+            if (cfg.State.Length != State.Length)
+                return false;
+            for (int i = 0; i < State.Length; i++)
+            {
+                if (cfg.State[i] != State[i])
+                    return false;
+            }
+
+            return true;
         }
 
         public StateConfiguration(int n, int m)

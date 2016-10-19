@@ -7,7 +7,7 @@ namespace HanoiIA.Strategies
 {
     public class RandomStrategy : IStrategy
     {
-        private StateConfiguration StateConfiguration { get; set; }
+        protected StateConfiguration StateConfiguration { get; set; }
 
         private int MaxIterationToReset { get; set; }
 
@@ -18,8 +18,9 @@ namespace HanoiIA.Strategies
 
         public event EventHandler<TransitionEventArgs> OnCompleted;
 
-        public event EventHandler<EventArgs> OnAbort; 
+        public event EventHandler<EventArgs> OnAbort;
 
+        public event EventHandler<EventArgs> OnStarted; 
 
         public RandomStrategy(int maxIterationToReset)
         {
@@ -43,7 +44,7 @@ namespace HanoiIA.Strategies
             return new[] { randomTower1, randomTower2 };
         }
 
-        private bool ValidateRandomTowers(int[] towers)
+        protected virtual bool ValidateRandomTowers(int[] towers)
         {
             if (!StateConfiguration.ExistsPiecesOnTower(towers[0]))
             {
@@ -59,6 +60,7 @@ namespace HanoiIA.Strategies
 
         public void SolveHanoi(int numberOfTowers, int numberOfPices)
         {
+            OnStarted?.Invoke(this,EventArgs.Empty);
             StateConfiguration = new StateConfiguration(numberOfTowers, numberOfPices);
             var iterations = 0;
             var finalFromTower = 0;

@@ -8,5 +8,6 @@ namespace HanoiIA.Strategies
         event EventHandler<TransitionEventArgs> OnTrantition;
         event EventHandler<TransitionEventArgs> OnCompleted;
         event EventHandler<EventArgs> OnAbort;
+        event EventHandler<EventArgs> OnStarted;
     }
 }
