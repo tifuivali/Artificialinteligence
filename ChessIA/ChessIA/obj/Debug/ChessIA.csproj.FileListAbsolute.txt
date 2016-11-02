@@ -1,2 +1,10 @@
 c:\users\tifui\documents\visual studio 2015\Projects\ChessIA\ChessIA\bin\Debug\ChessIA.exe.config
 D:\Projects\Artificialinteligence\ChessIA\ChessIA\bin\Debug\ChessIA.exe.config
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\bin\Debug\ChessIA.exe
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\bin\Debug\ChessIA.pdb
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.csprojResolveAssemblyReference.cache
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.Properties.Resources.resources
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.Table.resources
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.csproj.GenerateResource.Cache
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.exe
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\obj\Debug\ChessIA.pdb
