@@ -11,7 +11,7 @@ namespace HanoiIA
     {
         private IStrategy strategy;
 
-        private const int NumberOfCalls = 1;
+        private const int NumberOfCalls = 100;
         private DateTime StartTimeCurentCall;
         public int currentIteration = 0;
         private int numberOfStepsForCurrentCall;
@@ -24,16 +24,22 @@ namespace HanoiIA
         {
             streamWriter = File.CreateText(fileName);
             numberOfStepsForCurrentCall = 0;
-            // strategy = new RandomStrategy(100);
-            strategy = new BacktrackingStrategy();
-            //strategy = new HillStrategy(100);
+            //strategy = new RandomStrategy(100);
+            //strategy = new BacktrackingStrategy();
+            strategy = new HillStrategy(100);
             strategy.OnTrantition += Strategy_OnTrantition;
             strategy.OnCompleted += Strategy_OnCompleted;
             strategy.OnAbort += Strategy_OnAbort;
             strategy.OnStarted += Strategy_OnStarted;
+            strategy.OnReset += Strategy_OnReset;
             StepsList = new List<int>();
             ExecutionTimes = new List<TimeSpan>();
             numberOfSolvedCalls = 0;
+        }
+
+        private void Strategy_OnReset(object sender, EventArgs e)
+        {
+            numberOfStepsForCurrentCall = 0;
         }
 
         private void Strategy_OnStarted(object sender, EventArgs e)
@@ -114,10 +120,8 @@ namespace HanoiIA
         private int[] GenerateTowerAndPiecesInput()
         {
             var random = new Random();
-            var tower = 3;
-            var pieces = 3;
-            // var tower = random.Next(3, 6);
-            //var pieces = random.Next(2, 10);
+            var tower = random.Next(3, 6);
+            var pieces = random.Next(2, 10);
             return new int[] { tower, pieces };
         }
 

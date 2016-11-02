@@ -9,8 +9,7 @@ namespace HanoiIA
         {
             HanoiStatistic hanoiStatistic = new HanoiStatistic(@"C:\Users\tifui\Downloads\statistic.txt");
             hanoiStatistic.Run();
-           // hanoiStatistic.PrintStatistic();
-           Console.WriteLine("Finish");
+            hanoiStatistic.PrintStatistic();
             Console.ReadKey();
         }
     }

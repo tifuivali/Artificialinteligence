@@ -1,0 +1,2 @@
+c:\users\tifui\documents\visual studio 2015\Projects\ChessIA\ChessIA\bin\Debug\ChessIA.exe.config
+D:\Projects\Artificialinteligence\ChessIA\ChessIA\bin\Debug\ChessIA.exe.config

@@ -11,7 +11,7 @@ namespace HanoiIA.Strategies
 
         private int MaxIterationToReset { get; set; }
 
-        private const int MaxIterationToAbort = 1000000;
+        private const int MaxIterationToAbort = 100000;
         private readonly Random random = new Random();
 
         public event EventHandler<TransitionEventArgs> OnTrantition;
@@ -20,15 +20,17 @@ namespace HanoiIA.Strategies
 
         public event EventHandler<EventArgs> OnAbort;
 
-        public event EventHandler<EventArgs> OnStarted; 
+        public event EventHandler<EventArgs> OnStarted;
+
+        public event EventHandler<EventArgs> OnReset; 
 
         public RandomStrategy(int maxIterationToReset)
         {
             MaxIterationToReset = maxIterationToReset;
-            UsedTransition = new List<Transition>();
+            UsedConfigurations = new List<StateConfiguration>();
         }
 
-        private IList<Transition> UsedTransition { get; set; }
+        private IList<StateConfiguration> UsedConfigurations { get; set; }
 
         private int[] GetRandomTowers()
         {
@@ -52,6 +54,7 @@ namespace HanoiIA.Strategies
                 return false;
             }
 
+
             if (towers[0] == 0 || towers[1] == 0)
                 return false;
             return towers[0] != towers[1];
@@ -70,16 +73,19 @@ namespace HanoiIA.Strategies
             {
                 if (iterations > MaxIterationToReset)
                 {
+                    OnReset?.Invoke(this,EventArgs.Empty);
                     StateConfiguration = new StateConfiguration(numberOfTowers, numberOfPices);
-                    UsedTransition.Clear();
+                    UsedConfigurations.Clear();
                     iterations = 0;
                 }
 
                 var randomTowers = GetRandomTowers();
                 var transition = new Transition(StateConfiguration, randomTowers[0], randomTowers[1]);
+                var auxState = new StateConfiguration(StateConfiguration.State);
                 StateConfiguration = transition.NextCurrentState();
-                OnTrantition?.Invoke(transition, new TransitionEventArgs(randomTowers[0], randomTowers[1], StateConfiguration));
-                UsedTransition.Add(transition);
+                if(!StateConfiguration.Equals(auxState))
+                 OnTrantition?.Invoke(transition, new TransitionEventArgs(randomTowers[0], randomTowers[1], StateConfiguration));
+                UsedConfigurations.Add(new StateConfiguration(StateConfiguration.State));
                 iterations++;
                 finalFromTower = randomTowers[0];
                 finalToTower = randomTowers[1];

@@ -8,6 +8,7 @@ namespace HanoiIA.Strategies
         public event EventHandler<TransitionEventArgs> OnCompleted;
         public event EventHandler<EventArgs> OnAbort;
         public event EventHandler<EventArgs> OnStarted;
+        public event EventHandler<EventArgs> OnReset;
         private StateConfiguration state;
         private Transition transition;
         private int numberOfTowers;
@@ -20,12 +21,13 @@ namespace HanoiIA.Strategies
             this.numberOfTowers = numberOfTowers;
             state = new StateConfiguration(numberOfTowers, numberOfPices);
             numberOfIterations = 0;
-            Bk(1);
+            Bk(state,1);
         }
 
-        private void Bk(int k)
+
+
+        private void Bk(StateConfiguration state, int k)
         {
-            Console.WriteLine("K=" +k);
             numberOfIterations++;
             if (numberOfIterations >= MaxIteration)
             {
@@ -35,22 +37,23 @@ namespace HanoiIA.Strategies
 
             for (int i = 1; i <= numberOfTowers; i++)
             {
-                for (int j = k+1; j <= numberOfTowers; j++)
+                for (int j = 1; j <= numberOfTowers; j++)
                 {
-                    var auxState = new StateConfiguration(state.State);
-                    var transition = new Transition(state, i, j);
-                    state = transition.NextCurrentState();
-
-                    if (!state.Equals(auxState))
+                    if (i != j)
                     {
-                        OnTrantition?.Invoke(this, new TransitionEventArgs(k, i, state));
-                        if (state.IsFinalState())
+                        var auxState = new StateConfiguration(state.State);
+                        var copyState = new StateConfiguration(state.State);
+                        var transition = new Transition(copyState, i, j);
+                        copyState = transition.NextCurrentState();
+
+                        if (!copyState.Equals(auxState))
                         {
-                            OnCompleted?.Invoke(this, new TransitionEventArgs(k, i, state));
-                        }
-                        else
-                        {
-                            Bk(k + 1);
+                            OnTrantition?.Invoke(this, new TransitionEventArgs(k, i, state));
+                            if (state.IsFinalState())
+                            {
+                                OnCompleted?.Invoke(this, new TransitionEventArgs(k, i, state));
+                            }
+
                         }
                     }
                 }

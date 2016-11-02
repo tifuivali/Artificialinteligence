@@ -9,5 +9,6 @@ namespace HanoiIA.Strategies
         event EventHandler<TransitionEventArgs> OnCompleted;
         event EventHandler<EventArgs> OnAbort;
         event EventHandler<EventArgs> OnStarted;
+        event EventHandler<EventArgs> OnReset;
     }
 }
