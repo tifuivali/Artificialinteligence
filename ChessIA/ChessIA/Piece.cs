@@ -1,9 +1,13 @@
-﻿namespace ChessIA
+﻿using System.Drawing;
+
+namespace ChessIA
 {
     public class Piece
     {
         private readonly PieceColor _color;
         private readonly PieceType _type;
+        
+        public Point Position { get; set; }
 
         public Piece(PieceType type, PieceColor color)
         {

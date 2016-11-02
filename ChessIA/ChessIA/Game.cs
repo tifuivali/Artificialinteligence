@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using ChessIA.Strategies;
 
 namespace ChessIA
 {
@@ -21,8 +22,8 @@ namespace ChessIA
         {
             Board = new Board();
             Players = new List<Player>();
-            Players.Add(new Player {Name = "Georgel", PieceColor = PieceColor.White});
-            Players.Add(new Player {Name = "Gica", PieceColor = PieceColor.Black});
+            Players.Add(new Player { Name = "Georgel", PieceColor = PieceColor.White });
+            Players.Add(new Player { Name = "Computer", PieceColor = PieceColor.Black });
         }
 
         public void Start()
@@ -31,10 +32,22 @@ namespace ChessIA
             OnPlayerChanged?.Invoke(this, new GameEventArgs(CurrentPlayer));
         }
 
+        private void DoComputerMove()
+        {
+            IStrategy strategy = new MinimaxStrategy(CurrentPlayer, Board);
+            var move = strategy.GetMove();
+            Move(move);
+        }
+
         private void ChangePlayer()
         {
             CurrentPlayer = CurrentPlayer == Players[0] ? Players[1] : Players[0];
-            OnPlayerChanged?.Invoke(this,new GameEventArgs(CurrentPlayer));
+            OnPlayerChanged?.Invoke(this, new GameEventArgs(CurrentPlayer));
+            if (CurrentPlayer.Name == "Computer")
+            {
+                DoComputerMove();
+            }
+            
         }
 
         private bool IsFinalState()

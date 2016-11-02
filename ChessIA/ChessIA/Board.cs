@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace ChessIA
@@ -10,7 +11,7 @@ namespace ChessIA
         public Board()
         {
             _pieces = new List<Piece>();
-            for (int i = 0; i < 8*8; i++)
+            for (int i = 0; i < 8 * 8; i++)
             {
                 _pieces.Add(null);
             }
@@ -19,9 +20,12 @@ namespace ChessIA
 
         public Piece GetPiece(int x, int y)
         {
+            if (x > 7 || y > 7)
+                return null;
             int i = y * 8 + x;
             return _pieces[i];
         }
+
 
         public List<Piece> GetPieces()
         {
@@ -32,6 +36,10 @@ namespace ChessIA
         {
             int i = y * 8 + x;
             _pieces[i] = piece;
+            if (piece != null)
+            {
+                _pieces[i].Position = new Point(x, y);
+            }
         }
 
         private void PopulatePieces()
