@@ -57,6 +57,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Strategies\IStrategy.cs" />
     <Compile Include="Strategies\MinimaxStrategy.cs" />
+    <Compile Include="Strategies\MirrorStrategy.cs" />
     <Compile Include="Table.cs">
       <SubType>Form</SubType>
     </Compile>

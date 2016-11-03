@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using ChessIA.Strategies;
 
@@ -13,6 +12,8 @@ namespace ChessIA
         public List<Player> Players { get; set; }
 
         public Board Board { get; set; }
+
+        private Move LastOponnentMove { get; set; }
 
         public event EventHandler<GameEventArgs> OnGameComplete;
 
@@ -34,7 +35,8 @@ namespace ChessIA
 
         private void DoComputerMove()
         {
-            IStrategy strategy = new MinimaxStrategy(CurrentPlayer, Board);
+            // IStrategy strategy = new MinimaxStrategy(CurrentPlayer, Board);
+            IStrategy strategy = new MirrorStrategy(LastOponnentMove, Board, CurrentPlayer);
             var move = strategy.GetMove();
             Move(move);
         }
@@ -47,7 +49,7 @@ namespace ChessIA
             {
                 DoComputerMove();
             }
-            
+
         }
 
         private bool IsFinalState()
@@ -85,6 +87,7 @@ namespace ChessIA
                 {
                     OnGameComplete?.Invoke(this, new GameEventArgs(CurrentPlayer));
                 }
+                LastOponnentMove = move;
                 ChangePlayer();
             }
         }
